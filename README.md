@@ -1,151 +1,159 @@
 # Reversi (Othello) Web App
 
-A polished, full-stack implementation of the classic **Reversi / Othello** strategy game built with:
+A full-stack implementation of the classic **Reversi / Othello** strategy game, built with:
 
-- **Python (Flask)** backend  
-- **Vanilla HTML / CSS / JavaScript** frontend  
+- Python (Flask) backend  
+- Vanilla HTML / CSS / JavaScript frontend  
 - Modular game engine architecture  
 - Multiple AI strategies (Random → Minimax)
 
-The backend is the single source of truth for rules, state transitions, AI decisions, and replay snapshots.  
-The browser is responsible for rendering, user interaction, and animations.
+The backend manages all rules, game state transitions, AI logic, and replay snapshots.  
+The frontend focuses on rendering, interaction, and visual feedback.
 
 ---
 
-# Game Overview
+## Why This Project
 
-Reversi is a classic 8×8 strategy game where players alternate placing discs to capture the opponent’s pieces by bracketing them horizontally, vertically, or diagonally.
+I built this project to combine algorithmic thinking, clean architecture design, and user-facing interface work into a single cohesive application.
+
+Reversi is simple to understand but non-trivial to implement correctly. It requires:
+
+- Precise rule validation
+- Correct directional scanning logic
+- State consistency
+- AI decision modeling
+- Clean separation between engine and UI
+
+This made it a strong candidate for building a structured, production-style mini system rather than just a script.
+
+---
+
+## Game Overview
+
+Reversi is played on an 8×8 board. Players alternate placing discs in a way that brackets opponent discs horizontally, vertically, or diagonally. All bracketed discs are flipped.
+
+The game ends when neither player has a legal move. The player with the most discs wins.
 
 This implementation includes:
 
 - Local Player vs Player
-- Player vs AI (multiple difficulty levels)
-- Move history timeline
-- Replay mode using server-side snapshots
-- Undo functionality (PvP only)
-- Production-style WSGI setup
+- Player vs AI (three difficulty levels)
+- Move timeline panel
+- Replay mode based on backend snapshots
+- Undo support (PvP only)
+- WSGI-ready structure for production-style runs
 
 ---
 
-# Screenshots
+## Screenshots
 
-## Main Menu – Vs Computer Mode
+### Main Menu – Vs Computer
 
 ![Main Menu Vs Computer](assets/screenshots/main_menu_vs_computer.png)
 
-- Choose **Vs Computer** or **Local PvP**
-- Select player color (Black / White)
+- Select mode
+- Choose player color
 - Choose AI difficulty
-- Structured setup flow before starting the match
+- Structured setup flow before game start
 
 ---
 
-## Main Menu – Local PvP Mode with Replay Option
+### Main Menu – Local PvP with Replay Option
 
 ![Main Menu Vs Player](assets/screenshots/main_menue_vs_player.png)
 
-- Local two-player mode
-- Optional **Undo & Replay toggle**
-- Replay enabled only in PvP to preserve fairness vs AI
+- Two-player local mode
+- Optional Undo & Replay toggle
+- Replay intentionally restricted to PvP
 
 ---
 
-## Live Game – Vs Computer
+### Live Game – Vs Computer
 
 ![Live Game Vs CPU](assets/screenshots/live_game_vs_cpu.png)
 
 - Real-time score tracking
 - Turn indicator
-- Difficulty badge display
-- Legal move highlights
-- Move timeline panel with:
+- Legal move highlighting
+- Move timeline with:
   - Move number
   - Player color
-  - Board notation (e.g., C4, E3)
-  - Exact flipped-disc count
+  - Board coordinate (e.g., C4)
+  - Flipped-disc count
 
 ---
 
-## Live Game – Local PvP
+### Live Game – Local PvP
 
 ![Live Game PvP](assets/screenshots/live_game_vs_player_no_replay.png)
 
-- Centered board layout
-- Animated disc placement and flipping
-- Accurate score updates
+- Accurate flipping logic
 - Automatic pass handling
-- Game-over detection with winner/draw popup
+- Game-over detection
+- Clean, centered board layout
 
 ---
 
-## Replay Mode
+### Replay Mode
 
 ![Replay Mode](assets/screenshots/replay_screen.png)
 
 Replay mode is powered by server-side board snapshots.
 
 Features:
-
-- Step backward / forward through history
-- Full move timeline navigation
+- Step backward / forward
+- Timeline-based navigation
 - Replay state indicator
-- Moves disabled during replay (read-only mode)
+- Read-only board during replay
 - Snapshot-based state consistency
 
 ---
 
-# Features
+## Core Features
 
-## Core Gameplay
-
-- Classic **Reversi / Othello** rules
-- 8×8 board
+### Gameplay Engine
+- Classic 8×8 Reversi rules
 - Legal move validation
-- Automatic pass handling
-- Accurate disc flipping logic
-- Game-over detection
+- Directional scanning logic
+- Disc flipping correctness
+- Automatic pass detection
+- End-game detection
 - Final score computation
 
-## Game Modes
-
+### Game Modes
 - Local PvP
-- Vs Computer (PvA)
+- Player vs AI
 
-## AI Difficulties
+### AI Difficulties
+- Easy — random legal move
+- Medium — greedy corner-weighted heuristic
+- Hard — Minimax (depth 5)
 
-- `Easy` → Random legal move
-- `Medium` → Greedy corner-biased heuristic
-- `Hard` → Minimax (depth 5)
-
-## Timeline & Move Tracking
-
-Each move records:
-
-- Move number
+### Timeline & Move Tracking
+Each move stores:
+- Move index
 - Player color
-- Board coordinate (e.g., `C4`)
+- Algebraic coordinate (e.g., E3)
 - Exact flipped-disc count
 
-## Undo & Replay (Local PvP Only)
-
-- Undo one move at a time
+### Undo & Replay (PvP Only)
+- Undo last move
 - Enter replay mode
 - Step backward / forward
-- Replay mode blocks live moves
-- Server-managed snapshot consistency
+- Moves disabled during replay
+- Backend-managed snapshots
 
-## UI & UX
-
-- Modern dark-green theme
+### UI & UX
+- Structured home screen
+- Clear board state visuals
+- Highlighted legal moves
+- Last-move emphasis
+- Disc flip animations
 - Responsive layout
-- Board highlights for legal moves
-- Last-move visual emphasis
-- Disc placement and flip animations
-- Structured home screen flow
 
 ---
 
-# Architecture
+## Architecture
 
 ```text
 Browser UI (HTML / CSS / JS)

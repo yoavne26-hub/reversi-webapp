@@ -1,176 +1,160 @@
 # Reversi (Othello) Web App
 
-A polished browser-based Reversi game built with a Python backend (Flask) and a vanilla HTML/CSS/JavaScript frontend. The rules, board logic, and AI run in Python; the browser is responsible for rendering, controls, and animations.
+A polished, full-stack implementation of the classic **Reversi / Othello** strategy game built with:
 
-## Screenshots
+- **Python (Flask)** backend  
+- **Vanilla HTML / CSS / JavaScript** frontend  
+- Modular game engine architecture  
+- Multiple AI strategies (Random → Minimax)
 
-- Home / Setup screen (placeholder)
-- Game screen (board + HUD + timeline) (placeholder)
-- Replay mode / win modal (placeholder)
+The backend is the single source of truth for rules, state transitions, AI decisions, and replay snapshots.  
+The browser is responsible for rendering, user interaction, and animations.
 
-## Features
+---
 
-- Classic **Reversi / Othello** rules on an 8x8 board
-- **Local PvP** mode
-- **Vs Computer (PvA)** mode
-- AI difficulties:
-  - `Easy` (Random)
-  - `Medium` (Greedy Corner strategy)
-  - `Hard` (Minimax, depth 5)
-- Automatic pass handling when a player has no legal moves
-- Accurate score tracking and game-over detection
-- Move timeline panel:
-  - move number
-  - player color
-  - move notation (`C4`, `F5`, etc.)
-  - exact flipped-disc count
-- Last-move board highlight
-- Animated disc placement + flip effects
-- Win celebration popup (winner/draw + final score + actions)
-- Optional **Undo + Replay Mode** (Local PvP only):
-  - Undo one move at a time
-  - Replay timeline using server-side snapshots
-  - Step backward / forward through snapshots
-  - Replay mode blocks moves (read-only)
-- Professional UI:
-  - Home screen setup flow
-  - Centered board layout
-  - Responsive behavior
-  - Replay mode visual cues
+# Game Overview
 
-## Tech Stack
+Reversi is a classic 8×8 strategy game where players alternate placing discs to capture the opponent’s pieces by bracketing them horizontally, vertically, or diagonally.
 
-- **Backend**: Python, Flask
-- **Frontend**: HTML, CSS, Vanilla JavaScript
-- **WSGI (production-style local run)**: Waitress
-- **Tests**: pytest
+This implementation includes:
 
-## Architecture (ASCII)
+- Local Player vs Player
+- Player vs AI (multiple difficulty levels)
+- Move history timeline
+- Replay mode using server-side snapshots
+- Undo functionality (PvP only)
+- Production-style WSGI setup
+
+---
+
+# Screenshots
+
+## Main Menu – Vs Computer Mode
+
+![Main Menu Vs Computer](assets/screenshots/main_menu_vs_computer.png)
+
+- Choose **Vs Computer** or **Local PvP**
+- Select player color (Black / White)
+- Choose AI difficulty
+- Structured setup flow before starting the match
+
+---
+
+## Main Menu – Local PvP Mode with Replay Option
+
+![Main Menu Vs Player](assets/screenshots/main_menue_vs_player.png)
+
+- Local two-player mode
+- Optional **Undo & Replay toggle**
+- Replay enabled only in PvP to preserve fairness vs AI
+
+---
+
+## Live Game – Vs Computer
+
+![Live Game Vs CPU](assets/screenshots/live_game_vs_cpu.png)
+
+- Real-time score tracking
+- Turn indicator
+- Difficulty badge display
+- Legal move highlights
+- Move timeline panel with:
+  - Move number
+  - Player color
+  - Board notation (e.g., C4, E3)
+  - Exact flipped-disc count
+
+---
+
+## Live Game – Local PvP
+
+![Live Game PvP](assets/screenshots/live_game_vs_player_no_replay.png)
+
+- Centered board layout
+- Animated disc placement and flipping
+- Accurate score updates
+- Automatic pass handling
+- Game-over detection with winner/draw popup
+
+---
+
+## Replay Mode
+
+![Replay Mode](assets/screenshots/replay_screen.png)
+
+Replay mode is powered by server-side board snapshots.
+
+Features:
+
+- Step backward / forward through history
+- Full move timeline navigation
+- Replay state indicator
+- Moves disabled during replay (read-only mode)
+- Snapshot-based state consistency
+
+---
+
+# Features
+
+## Core Gameplay
+
+- Classic **Reversi / Othello** rules
+- 8×8 board
+- Legal move validation
+- Automatic pass handling
+- Accurate disc flipping logic
+- Game-over detection
+- Final score computation
+
+## Game Modes
+
+- Local PvP
+- Vs Computer (PvA)
+
+## AI Difficulties
+
+- `Easy` → Random legal move
+- `Medium` → Greedy corner-biased heuristic
+- `Hard` → Minimax (depth 5)
+
+## Timeline & Move Tracking
+
+Each move records:
+
+- Move number
+- Player color
+- Board coordinate (e.g., `C4`)
+- Exact flipped-disc count
+
+## Undo & Replay (Local PvP Only)
+
+- Undo one move at a time
+- Enter replay mode
+- Step backward / forward
+- Replay mode blocks live moves
+- Server-managed snapshot consistency
+
+## UI & UX
+
+- Modern dark-green theme
+- Responsive layout
+- Board highlights for legal moves
+- Last-move visual emphasis
+- Disc placement and flip animations
+- Structured home screen flow
+
+---
+
+# Architecture
 
 ```text
-Browser UI (HTML/CSS/JS)
+Browser UI (HTML / CSS / JS)
         |
         v
-Flask Routes / API (reversi/backend/api/routes.py)
+Flask API Routes (backend/api)
         |
         v
-GameState (reversi/backend/engine/game_state.py)
+GameState (backend/engine/game_state.py)
         |
-        +--> Board rules + flips (reversi/backend/engine/board.py)
-        +--> AI strategies (reversi/backend/engine/strategies/*)
-```
-
-## Repository Layout
-
-```text
-reversi/
-  backend/
-    api/
-    engine/
-  frontend/
-    static/
-    templates/
-  tests/
-  docs/
-run.py
-wsgi.py
-requirements.txt
-start_game.bat
-```
-
-## Installation
-
-```bash
-pip install -r requirements.txt
-```
-
-## Run (Windows One-Click)
-
-Double-click:
-
-- `Play Reversi.bat`
-
-This single launcher will:
-
-1. Install/update dependencies from `requirements.txt` (if needed)
-2. Start the app with **Waitress** (WSGI) in a separate terminal window
-3. Open the game automatically in your default browser at:
-   - `http://127.0.0.1:5000/`
-
-To stop the server, close the `Reversi Server` terminal window (or press `Ctrl+C` in it).
-
-### Make it look nicer (Desktop shortcut with icon)
-
-Batch files (`.bat`) cannot have a custom icon directly.
-
-When you run `Play Reversi.bat`, it now automatically creates/updates a Desktop shortcut:
-
-- `Play Reversi.lnk`
-
-The shortcut includes a generated Reversi-style icon and launches the same one-click flow.
-
-## Run (Command Line)
-
-### Development (Flask dev server)
-
-```bash
-python run.py
-```
-
-This is best for development/debugging. Flask will show a development-server warning (expected).
-
-### Production-style local run (Waitress WSGI)
-
-```bash
-python -m waitress --listen=127.0.0.1:5000 wsgi:app
-```
-
-## Testing
-
-```bash
-python -m pytest reversi/tests
-```
-
-## API Endpoints
-
-- `POST /api/new`
-- `GET /api/state`
-- `POST /api/move`
-- `POST /api/ai`
-- `POST /api/undo`
-- `POST /api/replay/enter`
-- `POST /api/replay/exit`
-- `POST /api/replay/step`
-
-Detailed request/response examples:
-
-- `reversi/docs/api.md`
-
-## Documentation
-
-- `reversi/docs/architecture.md` - engine/API/frontend design and state flow
-- `reversi/docs/api.md` - endpoint contract and examples
-
-## Deployment Notes
-
-- `run.py` uses Flask's built-in development server (good for local dev, not production)
-- `wsgi.py` exposes a WSGI app for production servers
-- For Windows deployment, **Waitress** is the simplest option
-- For Linux deployment, Gunicorn + reverse proxy (e.g. Nginx) is common
-
-## Future Roadmap
-
-- Save/load games
-- Sound effects and richer end-game effects (confetti, themes)
-- Online multiplayer
-- Bot-vs-bot spectator mode
-- More test coverage (engine edge cases + API integration)
-- Performance tuning / AI optimizations
-
-## Current Status
-
-- Playable end-to-end locally
-- Modular project structure (backend / frontend / tests / docs)
-- WSGI entry point included (`wsgi.py`)
-- One-click Windows launcher included (`Play Reversi.bat`)
-- Auto-created Desktop shortcut with custom Reversi icon (`Play Reversi.lnk`)
+        +--> Board Logic & Flipping (engine/board.py)
+        +--> AI Strategies (engine/strategies/)
